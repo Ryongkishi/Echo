@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
+using System.Linq;
     class SelectServe
     {
         //监听sockt 
@@ -72,6 +74,11 @@ using System.Net.Sockets;
             }
             catch (SocketException ex)
             {
+                MethodInfo mei = typeof(EventHandler).GetMethod("Ondisconnect");
+                object[] ob = { state };
+                //ob参数列表
+                mei.Invoke(null, ob);
+
                 clientfd.Close();
                 clinets.Remove(clientfd);
                 Console.WriteLine("receive SocketException" + ex.ToString());
@@ -80,24 +87,40 @@ using System.Net.Sockets;
             //客户端关闭
             if (count == 0)
             {
+                MethodInfo mei = typeof(EventHandler).GetMethod("Ondisconnect");
+                object[] ob = { state };
+                //ob参数列表
+                mei.Invoke(null, ob);
                 clientfd.Close();
                 clinets.Remove(clientfd);
                 Console.WriteLine("Socket close");
                 return false;
             }
-            //广播
-            string recvStr = System.Text.Encoding.Default.GetString(state.readBuff, 0, count);
-            Console.WriteLine("receive" + recvStr);
-            //这里不发客户端信息；
-            //string sendStr = clientfd.RemoteEndPoint.ToString() + ":" + recvStr;
-            string sendStr =  recvStr;
-            byte[] sendBytes = System.Text.Encoding.Default.GetBytes(sendStr);
-            Console.WriteLine("服务端广播:" + clinets.Values.Count+ " sendStr:" + sendStr);
-            foreach (ClientState s in clinets.Values)
-            {
-                s.socket.Send(sendBytes);
-            }
-            return true;
+        //消息处理
+        string recvStr = System.Text.Encoding.Default.GetString(state.readBuff, 0, count);
+        string[] split = recvStr.Split('|');
+        Console.WriteLine("[服务端]receive" + recvStr);
+        string msgName = split[0];
+        string msgArgs = split[1];
+        string funName = "Msg" + msgName;
+        MethodInfo mi = typeof(MsgHandler).GetMethod(funName);
+        object[] o = { state, msgArgs };
+        mi.Invoke(null, o);
+
+        /*
+        //广播
+        string recvStr = System.Text.Encoding.Default.GetString(state.readBuff, 0, count);
+        Console.WriteLine("receive" + recvStr);
+        //这里不发客户端信息；
+        //string sendStr = clientfd.RemoteEndPoint.ToString() + ":" + recvStr;
+        string sendStr =  recvStr;
+        byte[] sendBytes = System.Text.Encoding.Default.GetBytes(sendStr);
+        Console.WriteLine("服务端广播:" + clinets.Values.Count+ " sendStr:" + sendStr);
+        foreach (ClientState s in clinets.Values)
+        {
+            s.socket.Send(sendBytes);
+        }*/
+        return true;
         }
     }
     class ClientState
