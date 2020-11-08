@@ -5,15 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
-namespace SelectServe
-{
     class SelectServe
     {
         //监听sockt 
         static Socket listenfd;
         //客户端Socket 以及状态信息
         static Dictionary<Socket, ClientState> clinets = new Dictionary<Socket, ClientState>();
-        static void SeclectServe()
+        public static void SeclectServe()
         {
             Console.WriteLine("[服务器]SeclectServe");
             //scoket
@@ -90,8 +88,11 @@ namespace SelectServe
             //广播
             string recvStr = System.Text.Encoding.Default.GetString(state.readBuff, 0, count);
             Console.WriteLine("receive" + recvStr);
-            string sendStr = clientfd.RemoteEndPoint.ToString() + ":" + recvStr;
+            //这里不发客户端信息；
+            //string sendStr = clientfd.RemoteEndPoint.ToString() + ":" + recvStr;
+            string sendStr =  recvStr;
             byte[] sendBytes = System.Text.Encoding.Default.GetBytes(sendStr);
+            Console.WriteLine("服务端广播:" + clinets.Values.Count+ " sendStr:" + sendStr);
             foreach (ClientState s in clinets.Values)
             {
                 s.socket.Send(sendBytes);
@@ -104,4 +105,4 @@ namespace SelectServe
         public Socket socket;//保存客户端的socket;
         public byte[] readBuff = new byte[1024];
     }
-}
+

@@ -66,7 +66,8 @@ namespace EcnoServe
         static void Main(string[] args)
         {
             Console.WriteLine("Helle");
-            //scoket
+            SelectServe.SeclectServe();
+            /*
             listenfd = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             //bind
             IPAddress ipadr = IPAddress.Parse("127.0.0.1");
@@ -79,7 +80,7 @@ namespace EcnoServe
             //accept
             listenfd.BeginAccept(AcceptCallBack, listenfd);
             //等待
-            Console.ReadLine();
+            Console.ReadLine();*/
             /*/
             while (true)
             {
