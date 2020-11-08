@@ -1,0 +1,6 @@
+D:\新建文件夹\Serve\Echo_0\EcnoServe\bin\Debug\EcnoServe.exe.config
+D:\新建文件夹\Serve\Echo_0\EcnoServe\bin\Debug\EcnoServe.exe
+D:\新建文件夹\Serve\Echo_0\EcnoServe\bin\Debug\EcnoServe.pdb
+D:\新建文件夹\Serve\Echo_0\EcnoServe\obj\Debug\EcnoServe.csprojResolveAssemblyReference.cache
+D:\新建文件夹\Serve\Echo_0\EcnoServe\obj\Debug\EcnoServe.exe
+D:\新建文件夹\Serve\Echo_0\EcnoServe\obj\Debug\EcnoServe.pdb
